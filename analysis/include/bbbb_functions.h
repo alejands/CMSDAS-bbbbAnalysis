@@ -71,11 +71,13 @@ std::vector<jet_t> bbbb_jets_idxs_BothClosestToDiagonal(const std::vector<jet_t>
     //Do you add b-jet regression into the pairing?
     // bool breg = any_cast<bool>(parameterList_->at("BjetRegression"));
 
-    bool breg = false;
+    bool breg = true;
     // float targetHiggsMass1 = any_cast<float>(parameterList_->at("LeadingHiggsMass"));
     // float targetHiggsMass2 = any_cast<float>(parameterList_->at("SubleadingHiggsMass"));
-    float targetHiggsMass1 = 120;
-    float targetHiggsMass2 = 110;
+    //float targetHiggsMass1 = 120;
+    //float targetHiggsMass2 = 110;
+    float targetHiggsMass1 = 125;
+    float targetHiggsMass2 = 120;
 
     std::vector<TLorentzVector> p4s;
 
@@ -124,15 +126,21 @@ std::vector<jet_t> bbbb_jets_idxs_BothClosestToDiagonal(const std::vector<jet_t>
     std::pair<float, float> m_13_24 = std::make_pair(m3,m4);
     std::pair<float, float> m_14_23 = std::make_pair(m5,m6);
 
-    float d12_34 = TMath::Sqrt(pow(m_12_34.first,2) + pow(m_12_34.second,2) )*fabs( TMath::Sin( TMath::ATan(m_12_34.second/m_12_34.first) - TMath::ATan(targetHiggsMass2/targetHiggsMass1) ) );
-    float d13_24 = TMath::Sqrt(pow(m_13_24.first,2) + pow(m_13_24.second,2) )*fabs( TMath::Sin( TMath::ATan(m_13_24.second/m_13_24.first) - TMath::ATan(targetHiggsMass2/targetHiggsMass1) ) );
-    float d14_23 = TMath::Sqrt(pow(m_14_23.first,2) + pow(m_14_23.second,2) )*fabs( TMath::Sin( TMath::ATan(m_14_23.second/m_14_23.first) - TMath::ATan(targetHiggsMass2/targetHiggsMass1) ) );
+    // Diagonal
+    //float d12_34 = TMath::Sqrt(pow(m_12_34.first,2) + pow(m_12_34.second,2) )*fabs( TMath::Sin( TMath::ATan(m_12_34.second/m_12_34.first) - TMath::ATan(targetHiggsMass2/targetHiggsMass1) ) );
+    //float d13_24 = TMath::Sqrt(pow(m_13_24.first,2) + pow(m_13_24.second,2) )*fabs( TMath::Sin( TMath::ATan(m_13_24.second/m_13_24.first) - TMath::ATan(targetHiggsMass2/targetHiggsMass1) ) );
+    //float d14_23 = TMath::Sqrt(pow(m_14_23.first,2) + pow(m_14_23.second,2) )*fabs( TMath::Sin( TMath::ATan(m_14_23.second/m_14_23.first) - TMath::ATan(targetHiggsMass2/targetHiggsMass1) ) );
 
-    //NOTE: The formula below is equivalent (after some math-massaging =) )
-    //float d12_34_b = fabs( m_12_34.first - ((targetHiggsMass1/targetHiggsMass1)*m_12_34.second) );
-    //float d13_24_b = fabs( m_13_24.first - ((targetHiggsMass1/targetHiggsMass1)*m_13_24.second) );
-    //float d14_23_b = fabs( m_14_23.first - ((targetHiggsMass1/targetHiggsMass1)*m_14_23.second) );
- 
+    // Mean
+    float d12_34 = TMath::Sqrt(pow(m_12_34.first - targetHiggsMass1,2) + pow(m_12_34.second - targetHiggsMass2,2));
+    float d13_24 = TMath::Sqrt(pow(m_13_24.first - targetHiggsMass1,2) + pow(m_13_24.second - targetHiggsMass2,2));
+    float d14_23 = TMath::Sqrt(pow(m_14_23.first - targetHiggsMass1,2) + pow(m_14_23.second - targetHiggsMass2,2));
+
+    // Mass Difference
+    //float d12_34 = fabs(m_12_34.first - m_12_34.second);
+    //float d13_24 = fabs(m_13_24.first - m_13_24.second);
+    //float d14_23 = fabs(m_14_23.first - m_14_23.second);
+
     float the_min = std::min({d12_34, d13_24, d14_23});
         
 #include "analysis_utils.h"
